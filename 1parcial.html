@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calificaciones</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+    <div id="app" class="max-w-7xl mx-auto bg-white shadow-xl rounded-2xl p-6 sm:p-10">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 mb-2">Calificaciones</h1>
+            <p class="text-lg text-gray-500">Consulta las calificaciones de los estudiantes.</p>
+        </header>
+
+        <!-- Filtro de búsqueda -->
+        <div class="mb-6 flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0 sm:space-x-4">
+            <input type="text" id="searchInput" placeholder="Buscar por nombre o número de cuenta..." class="w-full sm:w-2/3 px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300">
+            <div class="relative w-full sm:w-1/3">
+                <select id="sortSelect" class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-3 px-4 pr-8 rounded-xl leading-tight focus:outline-none focus:bg-white focus:border-gray-500 transition duration-300">
+                    <option value="nombre">Ordenar por Nombre</option>
+                    <option value="finalAsc">Ordenar por Calificación Final (Menor a Mayor)</option>
+                    <option value="finalDesc">Ordenar por Calificación Final (Mayor a Menor)</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95a1 1 0 001.414 0l4-4a1 1 0 00-1.414-1.414L10 10.586 6.707 7.293a1 1 0 00-1.414 1.414l4 4z"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de calificaciones -->
+        <div class="overflow-x-auto rounded-xl shadow-md">
+            <table class="min-w-full bg-white border-collapse">
+                <thead class="bg-blue-600 text-white">
+                    <tr>
+                        <th class="px-6 py-4 text-left font-semibold text-sm uppercase rounded-tl-xl">Num. Cta</th>
+                        <th class="px-6 py-4 text-left font-semibold text-sm uppercase">Nombre</th>
+                        <th class="px-6 py-4 text-center font-semibold text-sm uppercase">P-10%</th>
+                        <th class="px-6 py-4 text-center font-semibold text-sm uppercase">E-50%</th>
+                        <th class="px-6 py-4 text-center font-semibold text-sm uppercase">EV-40%</th>
+                        <th class="px-6 py-4 text-center font-semibold text-sm uppercase rounded-tr-xl">FINAL</th>
+                    </tr>
+                </thead>
+                <tbody id="gradesTableBody" class="text-gray-700">
+                    <!-- Filas generadas dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const grades = [
+                { numCta: '20215493', nombre: 'ALVAREZ MEDINA JOSE ALBERTO', p10: 9, e50: 49, ev40: 38, final: 98 },
+                { numCta: '20215421', nombre: 'ASCENCIO ZUÑIGA FERNANDO ANTONIO', p10: 6, e50: 40, ev40: 33, final: 79 },
+                { numCta: '20216393', nombre: 'CHAVEZ CHAVEZ EMYR EFRAIM', p10: 9, e50: 49, ev40: 12, final: 70 },
+                { numCta: '20206417', nombre: 'DUEÑAS OCHOA VICTOR JAHEEL', p10: 9, e50: 20, ev40: 35, final: 64 },
+                { numCta: '20216442', nombre: 'GARCIA DE LA MORA CALEB', p10: 10, e50: 48, ev40: 40, final: 98 },
+                { numCta: '20216797', nombre: 'GUTIERREZ GARCIA ULISES ALEXANDER', p10: 10, e50: 49, ev40: 37, final: 96 },
+                { numCta: '20206807', nombre: 'HERNANDEZ TAPIA CARLOS ALEJANDRO', p10: 9, e50: 49, ev40: 38, final: 96 },
+                { numCta: '20246108', nombre: 'HERNANDEZ VILLALOBOS CARLOS ALBERTO', p10: 10, e50: 48, ev40: 37, final: 95 },
+                { numCta: '20218369', nombre: 'LICEA OVIEDO DAIRA VALERIA', p10: 7, e50: 49, ev40: 39, final: 95 },
+                { numCta: '20214971', nombre: 'LOPEZ GALVEZ YARA CAMILA', p10: 9, e50: 50, ev40: 35, final: 94 },
+                { numCta: '20206827', nombre: 'LOPEZ MORALES KAREN', p10: 10, e50: 50, ev40: 40, final: 99 },
+                { numCta: '20172879', nombre: 'MACIEL CEBALLOS LUIS ESTEBAN', p10: 9, e50: 49, ev40: 38, final: 97 },
+                { numCta: '20215319', nombre: 'MARTINEZ ENCISO DIEGO EMILIANO', p10: 6, e50: 40, ev40: 19, final: 65 },
+                { numCta: '20212918', nombre: 'PALOMINO GARCIA ALEXIS RAFAEL', p10: 10, e50: 50, ev40: 40, final: 99 },
+                { numCta: '20214559', nombre: 'RAMIREZ GONZALEZ IRVING TOMAS', p10: 9, e50: 50, ev40: 38, final: 97 },
+                { numCta: '20216923', nombre: 'RICARDO LIZAMA MOISES EMILIANO', p10: 10, e50: 49, ev40: 38, final: 97 },
+                { numCta: '20187519', nombre: 'RODRIGUEZ CASTAÑEDA ANGEL GAEL', p10: 7, e50: 40, ev40: 0, final: 46 },
+                { numCta: '20215643', nombre: 'TREJO ZARAGOZA LUIS FERNANDO', p10: 9, e50: 50, ev40: 36, final: 95 },
+                { numCta: '20246190', nombre: 'VARGAS RIVAS CARMINA', p10: 7, e50: 50, ev40: 17, final: 74 },
+                { numCta: '20216984', nombre: 'VELASCO DE LA CRUZ DIEGO EMILIO', p10: 9, e50: 49, ev40: 39, final: 97 },
+                { numCta: '20217334', nombre: 'WALLE CONTRERAS ANA PAOLA', p10: 9, e50: 49, ev40: 34, final: 92 },
+            ];
+
+            const searchInput = document.getElementById('searchInput');
+            const sortSelect = document.getElementById('sortSelect');
+            const gradesTableBody = document.getElementById('gradesTableBody');
+
+            // Función para renderizar la tabla
+            function renderTable(data) {
+                gradesTableBody.innerHTML = ''; // Limpiar la tabla
+                data.forEach((student, index) => {
+                    const row = document.createElement('tr');
+                    // Alternar colores de fila para mejor legibilidad
+                    row.className = `border-b ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`;
+
+                    // Resaltar calificaciones finales bajas o altas
+                    let finalColor = 'text-gray-800';
+                    if (student.final < 70) {
+                        finalColor = 'text-red-500 font-bold';
+                    } else if (student.final > 90) {
+                        finalColor = 'text-green-600 font-bold';
+                    }
+
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${student.numCta}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${student.nombre}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-700">${student.p10}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-700">${student.e50}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-700">${student.ev40}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm ${finalColor}">${student.final}</td>
+                    `;
+                    gradesTableBody.appendChild(row);
+                });
+            }
+
+            // Función para manejar el filtro y el orden
+            function handleFilterAndSort() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const sortValue = sortSelect.value;
+                
+                let filteredGrades = grades.filter(student =>
+                    student.nombre.toLowerCase().includes(searchTerm) ||
+                    student.numCta.includes(searchTerm)
+                );
+
+                switch(sortValue) {
+                    case 'nombre':
+                        filteredGrades.sort((a, b) => a.nombre.localeCompare(b.nombre));
+                        break;
+                    case 'finalAsc':
+                        filteredGrades.sort((a, b) => a.final - b.final);
+                        break;
+                    case 'finalDesc':
+                        filteredGrades.sort((a, b) => b.final - a.final);
+                        break;
+                }
+
+                renderTable(filteredGrades);
+            }
+
+            // Escuchar eventos de entrada y cambio en el filtro y el orden
+            searchInput.addEventListener('input', handleFilterAndSort);
+            sortSelect.addEventListener('change', handleFilterAndSort);
+
+            // Renderizar la tabla inicial
+            handleFilterAndSort();
+        });
+    </script>
+</body>
+</html>
