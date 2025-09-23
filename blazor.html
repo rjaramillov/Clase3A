@@ -27,6 +27,44 @@
                 height: 350px;
             }
         }
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+        .flow-box {
+            background-color: #00449E;
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            min-width: 150px;
+            position: relative;
+            z-index: 10;
+        }
+        .flow-arrow {
+            width: 2px;
+            height: 40px;
+            background-color: #00449E;
+            position: relative;
+        }
+        .flow-arrow::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: -4px;
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid #00449E;
+        }
+        .flow-line {
+            height: 2px;
+            width: 50px;
+            background-color: #00449E;
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
@@ -94,7 +132,10 @@
                 <h2 class="text-3xl font-bold text-[#00449E] mb-4">C# y sus Fundamentos</h2>
                 <p class="mb-6 text-base">C# es el lenguaje que usaremos. Es moderno, robusto y está diseñado para construir aplicaciones complejas de forma sencilla. Haz clic en los conceptos para explorar más.</p>
                 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
+                    <div id="clases-objetos-toggle" class="bg-gray-50 p-4 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors">
+                        <h4 class="font-bold text-lg text-[#005BC6]">Clases y Objetos</h4>
+                    </div>
                     <div id="identificadores-toggle" class="bg-gray-50 p-4 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors">
                         <h4 class="font-bold text-lg text-[#005BC6]">Identificadores</h4>
                     </div>
@@ -103,6 +144,33 @@
                     </div>
                     <div id="variables-toggle" class="bg-gray-50 p-4 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors">
                         <h4 class="font-bold text-lg text-[#005BC6]">Variables</h4>
+                    </div>
+                </div>
+                
+                <div id="clases-objetos-details" class="hidden mt-4 p-4 bg-gray-50 rounded-lg shadow-inner">
+                    <h4 class="font-bold text-lg text-[#00449E] mb-2">Clases y Objetos</h4>
+                    <p class="text-sm mb-2">En la programación orientada a objetos (POO), una **clase** es como un plano o un molde para crear objetos. Define las propiedades (campos) y las acciones (métodos) que un objeto tendrá.</p>
+                    <p class="text-sm">Un **objeto** es una instancia de una clase. Es el producto final creado a partir del plano, con sus propios valores para las propiedades definidas.</p>
+                    <div class="mt-4 flex flex-col md:flex-row items-center justify-around space-y-4 md:space-y-0 md:space-x-8">
+                        <div class="text-center">
+                            <h5 class="font-bold text-sm text-[#005BC6]">Clase (Plano)</h5>
+                            <div class="bg-gray-200 p-3 mt-2 rounded-lg">
+                                <pre><code class="language-csharp">public class Coche {
+    public string Color;
+    public int Velocidad;
+
+    public void Acelerar() { ... }
+}</code></pre>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h5 class="font-bold text-sm text-[#005BC6]">Objeto (Instancia)</h5>
+                            <div class="bg-gray-200 p-3 mt-2 rounded-lg">
+                                <pre><code class="language-csharp">Coche miCoche = new Coche();
+miCoche.Color = "Rojo";
+miCoche.Velocidad = 0;</code></pre>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -187,8 +255,14 @@ double salario = 50000.75;</code></pre>
                             <li>**Modos de Renderizado (Server/WebAssembly):** La lógica se puede ejecutar en el servidor (Blazor Server) para una carga inicial más rápida o directamente en el navegador (Blazor WebAssembly) para una experiencia sin servidor.</li>
                         </ul>
                     </div>
-                    <div class="chart-container">
-                        <canvas id="blazorChart"></canvas>
+                    <div class="flow-container p-4 rounded-lg">
+                        <div class="flow-box">Navegador</div>
+                        <div class="flow-arrow"></div>
+                        <div class="flow-box">Componentes Razor</div>
+                        <div class="flow-arrow"></div>
+                        <div class="flow-box">Lógica de C#</div>
+                        <div class="flow-arrow"></div>
+                        <div class="flow-box">Servidor / WebAssembly</div>
                     </div>
                 </div>
             </section>
@@ -229,6 +303,83 @@ double salario = 50000.75;</code></pre>
                 <p class="mt-6 text-xs text-gray-500">Referencia: *Análisis de la industria y documentación de Microsoft Docs sobre Blazor.*</p>
             </section>
 
+            <section id="blazor-practice" class="bg-white rounded-lg shadow-lg p-6 md:p-8 transition-transform transform hover:scale-105">
+                <h2 class="text-3xl font-bold text-[#00449E] mb-4">Práctica de la Sesión 1: ¡Manos a la Obra con Blazor!</h2>
+                <p class="mb-6 text-base">Sigue estos pasos para crear tu primera aplicación web interactiva con Blazor. ¡No te preocupes si no lo entiendes todo a la primera, lo importante es practicar!</p>
+                
+                <ol class="space-y-8 text-left">
+                    <li class="p-6 bg-gray-50 rounded-lg shadow-sm">
+                        <h4 class="font-bold text-lg text-[#005BC6] mb-2">Paso 1: Crear la Aplicación</h4>
+                        <p class="text-sm mb-4">Inicia Visual Studio y crea un nuevo proyecto. Elige la plantilla **Blazor Web App**.</p>
+                        <img src="https://placehold.co/600x400/00449E/white?text=Crear+Proyecto+Blazor" alt="Imagen de la creación de un proyecto Blazor en Visual Studio." class="w-full h-auto rounded-lg shadow-md">
+                    </li>
+                    <li class="p-6 bg-gray-50 rounded-lg shadow-sm">
+                        <h4 class="font-bold text-lg text-[#005BC6] mb-2">Paso 2: Explorar el Proyecto</h4>
+                        <p class="text-sm mb-4">Familiarízate con la estructura de carpetas. Haz clic en cada una para saber qué contienen.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                            <div id="wwwroot-toggle" class="bg-gray-200 p-3 rounded-lg cursor-pointer hover:bg-gray-300 transition-colors">
+                                <p class="font-semibold text-center">📁 wwwroot</p>
+                            </div>
+                            <div id="components-toggle" class="bg-gray-200 p-3 rounded-lg cursor-pointer hover:bg-gray-300 transition-colors">
+                                <p class="font-semibold text-center">📁 Components</p>
+                            </div>
+                            <div id="pages-toggle" class="bg-gray-200 p-3 rounded-lg cursor-pointer hover:bg-gray-300 transition-colors">
+                                <p class="font-semibold text-center">📁 Pages</p>
+                            </div>
+                        </div>
+                        <div id="wwwroot-details" class="hidden mt-4 p-4 bg-gray-100 rounded-lg text-sm">
+                            <p class="font-bold mb-1">`wwwroot` (Archivos estáticos):</p>
+                            <p>Contiene todos los archivos públicos de tu aplicación web, como hojas de estilo CSS, imágenes, archivos JavaScript y otros activos estáticos. Es el equivalente a la carpeta "public" en otros frameworks.</p>
+                        </div>
+                        <div id="components-details" class="hidden mt-4 p-4 bg-gray-100 rounded-lg text-sm">
+                            <p class="font-bold mb-1">`Components` (Tus componentes):</p>
+                            <p>Aquí se almacenan los componentes de la interfaz de usuario de Blazor que puedes reutilizar en tu aplicación. Contiene subcarpetas como `Layout`, que define el diseño de la página, y `Pages`.</p>
+                        </div>
+                        <div id="pages-details" class="hidden mt-4 p-4 bg-gray-100 rounded-lg text-sm">
+                            <p class="font-bold mb-1">`Pages` (Páginas de la aplicación):</p>
+                            <p>Esta carpeta es una subcarpeta de `Components` y contiene los componentes de Blazor que actúan como páginas completas, accesibles a través de una URL. Aquí es donde creamos el componente `Saludo.razor`.</p>
+                        </div>
+                    </li>
+                    <li class="p-6 bg-gray-50 rounded-lg shadow-sm">
+                        <h4 class="font-bold text-lg text-[#005BC6] mb-2">Paso 3: Crear el Componente de Saludo</h4>
+                        <p class="text-sm mb-4">Dentro de la carpeta `Components/Pages`, crea un nuevo archivo llamado **`Saludo.razor`**.</p>
+                        <div class="bg-gray-200 p-3 mt-4 rounded-lg">
+                            <pre><code class="language-csharp">@page "/saludo"
+
+<h1>¡Hola Mundo!</h1>
+<p>@elMensaje</p>
+
+@code {
+    private string elMensaje = "¡Hola!";
+}</code></pre>
+                        </div>
+                    </li>
+                    <li class="p-6 bg-gray-50 rounded-lg shadow-sm">
+                        <h4 class="font-bold text-lg text-[#005BC6] mb-2">Paso 4: Hacerlo Interactivo</h4>
+                        <p class="text-sm mb-4">Añade un campo de texto y un botón para que el usuario pueda ingresar su nombre y el saludo se personalice.</p>
+                        <div class="bg-gray-200 p-3 mt-4 rounded-lg">
+                            <pre><code class="language-csharp">@page "/saludo"
+
+<h1>¡Bienvenido a Blazor!</h1>
+<p>@elMensaje</p>
+
+<label>Escribe tu nombre:</label>
+<input @bind="Nombre" />
+
+<button @onclick="Saludar">Saludo</button>
+
+@code {
+    private string elMensaje = "¡Hola!";
+    private string? Nombre;
+
+    private void Saludar() {
+        elMensaje = "¡Hola " + Nombre + "!";
+    }
+}</code></pre>
+                        </div>
+                    </li>
+                </ol>
+            </section>
 
         </main>
 
@@ -242,6 +393,10 @@ double salario = 50000.75;</code></pre>
         document.getElementById('web-app-toggle').addEventListener('click', function() {
             const details = document.getElementById('web-app-details');
             details.classList.toggle('hidden');
+        });
+
+        document.getElementById('clases-objetos-toggle').addEventListener('click', function() {
+            document.getElementById('clases-objetos-details').classList.toggle('hidden');
         });
 
         document.getElementById('identificadores-toggle').addEventListener('click', function() {
@@ -266,6 +421,18 @@ double salario = 50000.75;</code></pre>
 
         document.getElementById('tipo-booleano-toggle').addEventListener('click', function() {
             document.getElementById('tipo-booleano-details').classList.toggle('hidden');
+        });
+        
+        document.getElementById('wwwroot-toggle').addEventListener('click', function() {
+            document.getElementById('wwwroot-details').classList.toggle('hidden');
+        });
+
+        document.getElementById('components-toggle').addEventListener('click', function() {
+            document.getElementById('components-details').classList.toggle('hidden');
+        });
+
+        document.getElementById('pages-toggle').addEventListener('click', function() {
+            document.getElementById('pages-details').classList.toggle('hidden');
         });
 
 
@@ -332,67 +499,6 @@ double salario = 50000.75;</code></pre>
                             text: 'Ecosistema de Aplicaciones .NET',
                             font: { size: 16 }
                         }
-                    }
-                }
-            });
-
-            
-            const blazorCtx = document.getElementById('blazorChart').getContext('2d');
-            new Chart(blazorCtx, {
-                type: 'bubble',
-                data: {
-                    datasets: [
-                        {
-                            label: 'Componentes UI (Razor)',
-                            data: [{ x: 50, y: 70, r: 25 }],
-                            backgroundColor: '#005BC6',
-                            borderColor: '#FFFFFF',
-                            borderWidth: 2
-                        },
-                        {
-                            label: 'Lógica en C#',
-                            data: [{ x: 30, y: 30, r: 20 }],
-                            backgroundColor: '#3691FF',
-                            borderColor: '#FFFFFF',
-                            borderWidth: 2
-                        },
-                        {
-                            label: 'Ejecución (Server/WebAssembly)',
-                            data: [{ x: 70, y: 30, r: 15 }],
-                            backgroundColor: '#7FBCFF',
-                            borderColor: '#FFFFFF',
-                            borderWidth: 2
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label;
-                                }
-                            }
-                        },
-                        legend: {
-                            display: true,
-                            labels: {
-                                boxWidth: 10,
-                                boxHeight: 10,
-                                usePointStyle: true
-                            }
-                        },
-                        title: {
-                            display: true,
-                            text: 'Anatomía de una Aplicación Blazor',
-                            font: { size: 16 }
-                        }
-                    },
-                    scales: {
-                        x: { display: false },
-                        y: { display: false }
                     }
                 }
             });
