@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografía: Fundamentos de C# y Blazor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-6xl font-bold text-[#00449E]">Fundamentos de C# y Blazor</h1>
+            <p class="text-lg md:text-xl text-[#005BC6] mt-2">Una guía visual para iniciar en el desarrollo web moderno.</p>
+        </header>
+
+        <main class="space-y-12">
+
+            <section id="net-core" class="bg-white rounded-lg shadow-lg p-6 md:p-8 transition-transform transform hover:scale-105">
+                <h2 class="text-3xl font-bold text-[#00449E] mb-4">Plataforma de Desarrollo .NET Core</h2>
+                <p class="mb-6 text-base">.NET Core es la base sobre la que construimos. Es una plataforma de Microsoft, multiplataforma y de código abierto, que permite crear una gran variedad de aplicaciones utilizando C# y otros lenguajes.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h3 class="text-2xl font-bold text-[#005BC6] mb-4">¿Qué puedes construir?</h3>
+                        <div class="space-y-4">
+                            <div id="web-app-toggle" class="flex items-center bg-[#7FBCFF] bg-opacity-20 p-3 rounded-lg cursor-pointer">
+                                <span class="text-2xl mr-4">🌐</span>
+                                <span class="font-semibold">Aplicaciones Web</span>
+                            </div>
+                            <div id="web-app-details" class="hidden mt-2 p-4 bg-gray-50 rounded-lg shadow-inner">
+                                <h4 class="font-bold text-lg text-[#00449E] mb-2">.NET Core vs. Otros Frameworks</h4>
+                                <ul class="list-disc list-inside text-sm space-y-2">
+                                    <li>**Ventajas**: Alto rendimiento, optimizado para la nube, multiplataforma (Windows, Linux, macOS) y un ecosistema de código abierto con gran soporte de Microsoft.</li>
+                                    <li>**Desventajas**: La curva de aprendizaje puede ser más pronunciada para desarrolladores nuevos en el ecosistema .NET y el consumo de recursos puede ser elevado en comparación con lenguajes más ligeros como Node.js.</li>
+                                </ul>
+                            </div>
+                            <div class="flex items-center bg-[#7FBCFF] bg-opacity-20 p-3 rounded-lg">
+                                <span class="text-2xl mr-4">💻</span>
+                                <span class="font-semibold">Software de Escritorio</span>
+                            </div>
+                            <div class="flex items-center bg-[#7FBCFF] bg-opacity-20 p-3 rounded-lg">
+                                <span class="text-2xl mr-4">📱</span>
+                                <span class="font-semibold">Aplicaciones Móviles</span>
+                            </div>
+                            <div class="flex items-center bg-[#7FBCFF] bg-opacity-20 p-3 rounded-lg">
+                                <span class="text-2xl mr-4">🎮</span>
+                                <span class="font-semibold">Videojuegos</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="netCoreChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="mt-8 pt-8 border-t border-gray-200">
+                    <h3 class="text-2xl font-bold text-[#005BC6] mb-4">Ventajas de .NET Core en el Mercado Laboral</h3>
+                    <p class="mb-4 text-base">El desarrollo en .NET Core es una habilidad de alta demanda en el mercado laboral, especialmente para proyectos empresariales. Las ventajas clave incluyen:</p>
+                    <ul class="list-disc list-inside text-sm space-y-2">
+                        <li>**Rendimiento y Escalabilidad:** Es una de las plataformas con mejor rendimiento, ideal para aplicaciones de gran escala y con alta carga de trabajo.</li>
+                        <li>**Demanda Laboral Constante:** Muchas empresas grandes dependen de .NET para su desarrollo, lo que genera una demanda continua de expertos.</li>
+                        <li>**Salarios Competitivos:** Los desarrolladores .NET suelen tener salarios atractivos debido a la criticidad y complejidad de los proyectos que manejan.</li>
+                        <li>**Ecosistema Robusto:** La integración con Azure, SQL Server y otras tecnologías de Microsoft es una gran ventaja en el mundo corporativo.</li>
+                    </ul>
+                    <p class="mt-6 text-xs text-gray-500">Referencia: Microsoft Learn (s. f.). *Selección entre .NET y .NET Framework para aplicaciones de servidor*. Recuperado de <a href="https://learn.microsoft.com/es-es/dotnet/standard/choosing-core-framework-server" class="underline" target="_blank">https://learn.microsoft.com/es-es/dotnet/standard/choosing-core-framework-server</a></p>
+                </div>
+            </section>
+
+            <section id="csharp" class="bg-white rounded-lg shadow-lg p-6 md:p-8 transition-transform transform hover:scale-105">
+                <h2 class="text-3xl font-bold text-[#00449E] mb-4">C# y sus Fundamentos</h2>
+                <p class="mb-6 text-base">C# es el lenguaje que usaremos. Es moderno, robusto y está diseñado para construir aplicaciones complejas de forma sencilla. Haz clic en los conceptos para explorar más.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                    <div id="identificadores-toggle" class="bg-gray-50 p-4 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors">
+                        <h4 class="font-bold text-lg text-[#005BC6]">Identificadores</h4>
+                    </div>
+                    <div id="palabras-clave-toggle" class="bg-gray-50 p-4 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors">
+                        <h4 class="font-bold text-lg text-[#005BC6]">Palabras Clave</h4>
+                    </div>
+                    <div id="variables-toggle" class="bg-gray-50 p-4 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors">
+                        <h4 class="font-bold text-lg text-[#005BC6]">Variables</h4>
+                    </div>
+                </div>
+
+                <div id="identificadores-details" class="hidden mt-4 p-4 bg-gray-50 rounded-lg shadow-inner">
+                    <h4 class="font-bold text-lg text-[#00449E] mb-2">Identificadores</h4>
+                    <p class="text-sm">Son los nombres que se asignan a los elementos de programación, como clases, métodos y variables. Deben comenzar con una letra o un guion bajo, y no pueden contener espacios. C# es sensible a mayúsculas y minúsculas.</p>
+                    <p class="text-xs text-gray-500 mt-2">Ejemplos: `miVariable`, `_nombre`, `NombreDeUsuario`.</p>
+                    <div class="bg-gray-200 p-3 mt-4 rounded-lg">
+                        <pre><code class="language-csharp">string miVariable;</code></pre>
+                    </div>
+                </div>
+
+                <div id="palabras-clave-details" class="hidden mt-4 p-4 bg-gray-50 rounded-lg shadow-inner">
+                    <h4 class="font-bold text-lg text-[#00449E] mb-2">Palabras Clave</h4>
+                    <p class="text-sm">Son palabras reservadas por el lenguaje que tienen un significado especial y no pueden ser usadas como identificadores. Son la base de la sintaxis y las estructuras de C#.</p>
+                    <p class="text-xs text-gray-500 mt-2">Ejemplos: `class`, `public`, `private`, `int`, `string`, `if`, `for`.</p>
+                    <div class="bg-gray-200 p-3 mt-4 rounded-lg">
+                        <pre><code class="language-csharp">public class Persona { ... }</code></pre>
+                    </div>
+                </div>
+
+                <div id="variables-details" class="hidden mt-4 p-4 bg-gray-50 rounded-lg shadow-inner">
+                    <h4 class="font-bold text-lg text-[#00449E] mb-2">Variables y Tipos de Datos</h4>
+                    <p class="text-sm">Las variables son espacios de memoria para almacenar datos. Cada una debe tener un tipo de dato que define su valor. Haz clic en los tipos para ver más.</p>
+                    
+                    <div class="mt-4 space-y-4">
+                        <div id="tipo-numerico-toggle" class="bg-gray-200 p-3 rounded-lg cursor-pointer hover:bg-gray-300 transition-colors">
+                            <h5 class="font-semibold text-[#005BC6]">Tipos Numéricos</h5>
+                        </div>
+                        <div id="tipo-numerico-details" class="hidden mt-2 p-4 bg-gray-100 rounded-lg text-sm">
+                            <p class="font-bold mb-1">Enteros:</p>
+                            <ul class="list-disc list-inside ml-4 mb-2">
+                                <li>**`int`**: Números enteros (e.g., `10`).</li>
+                                <li>**`long`**: Números enteros grandes.</li>
+                                <li>**`short`**: Números enteros pequeños.</li>
+                            </ul>
+                            <p class="font-bold mb-1">Punto Flotante:</p>
+                            <ul class="list-disc list-inside ml-4 mb-2">
+                                <li>**`float`**: Números con decimales de precisión simple (e.g., `10.5f`).</li>
+                                <li>**`double`**: Números con decimales de precisión doble (e.g., `10.5`). Es el tipo por defecto para decimales.</li>
+                                <li>**`decimal`**: Alta precisión para cálculos financieros.</li>
+                            </ul>
+                            <div class="bg-gray-200 p-3 mt-2 rounded-lg">
+                                <pre><code class="language-csharp">int edad = 20;
+double salario = 50000.75;</code></pre>
+                            </div>
+                        </div>
+
+                        <div id="tipo-texto-toggle" class="bg-gray-200 p-3 rounded-lg cursor-pointer hover:bg-gray-300 transition-colors">
+                            <h5 class="font-semibold text-[#005BC6]">Tipos de Texto</h5>
+                        </div>
+                        <div id="tipo-texto-details" class="hidden mt-2 p-4 bg-gray-100 rounded-lg text-sm">
+                            <p class="font-bold mb-1">`string`:</p>
+                            <p>Una secuencia de caracteres. Se usa para almacenar texto. Se declara entre comillas dobles.</p>
+                            <div class="bg-gray-200 p-3 mt-2 rounded-lg">
+                                <pre><code class="language-csharp">string nombre = "Juan Pérez";</code></pre>
+                            </div>
+                        </div>
+
+                        <div id="tipo-booleano-toggle" class="bg-gray-200 p-3 rounded-lg cursor-pointer hover:bg-gray-300 transition-colors">
+                            <h5 class="font-semibold text-[#005BC6]">Tipo Booleano</h5>
+                        </div>
+                        <div id="tipo-booleano-details" class="hidden mt-2 p-4 bg-gray-100 rounded-lg text-sm">
+                            <p class="font-bold mb-1">`bool`:</p>
+                            <p>Almacena un valor de verdad. Solo puede ser `true` o `false`.</p>
+                            <div class="bg-gray-200 p-3 mt-2 rounded-lg">
+                                <pre><code class="language-csharp">bool esAdmin = true;</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="blazor" class="bg-white rounded-lg shadow-lg p-6 md:p-8 transition-transform transform hover:scale-105">
+                <h2 class="text-3xl font-bold text-[#00449E] mb-4">Blazor: Desarrollo Web con C#</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <p class="mb-4 text-base">Blazor es la arquitectura web que nos permite usar C# para crear interfaces de usuario interactivas. Se basa en componentes reutilizables, permitiendo que la lógica se ejecute tanto en el cliente como en el servidor.</p>
+                        <ul class="list-disc list-inside space-y-2 text-sm text-gray-800">
+                            <li>**Componentes (Razor):** Los componentes son la base. Son bloques de interfaz de usuario reutilizables que combinan HTML y C#.</li>
+                            <li>**Lógica de Negocio (C#):** Toda la lógica y la manipulación de datos se manejan con C#, eliminando la necesidad de JavaScript para la mayoría de las tareas.</li>
+                            <li>**Modos de Renderizado (Server/WebAssembly):** La lógica se puede ejecutar en el servidor (Blazor Server) para una carga inicial más rápida o directamente en el navegador (Blazor WebAssembly) para una experiencia sin servidor.</li>
+                        </ul>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="blazorChart"></canvas>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="razor" class="bg-white rounded-lg shadow-lg p-6 md:p-8 transition-transform transform hover:scale-105">
+                <h2 class="text-3xl font-bold text-[#00449E] mb-4">El Lenguaje de Blazor: Razor</h2>
+                <p class="mb-6 text-base">Razor es la sintaxis que une HTML y C#. El símbolo `@` es la clave para integrar la lógica de C# directamente en el marcado HTML, haciendo el código más limpio y productivo.</p>
+                <div class="bg-[#00449E] text-white p-6 rounded-lg font-mono text-sm md:text-base shadow-inner">
+                    <p><span class="text-[#7FBCFF]">&lt;h1&gt;</span>¡Hola, <span class="text-yellow-300 font-bold">@nombreUsuario</span>!<span class="text-[#7FBCFF]">&lt;/h1&gt;</span></p>
+                    <br>
+                    <p><span class="text-pink-400">@code</span> {</p>
+                    <p class="ml-4"><span class="text-purple-400">private string</span> nombreUsuario = <span class="text-green-300">"Estudiante"</span>;</p>
+                    <p>}</p>
+                </div>
+            </section>
+
+            <section id="blazor-market" class="bg-white rounded-lg shadow-lg p-6 md:p-8 transition-transform transform hover:scale-105">
+                <h2 class="text-3xl font-bold text-[#00449E] mb-4">Blazor en el Mercado Laboral</h2>
+                
+                <h3 class="text-2xl font-bold text-[#005BC6] mb-4">Ventajas de Blazor</h3>
+                <ul class="list-disc list-inside text-base space-y-2 mb-6">
+                    <li>**Un solo lenguaje:** Permite a los desarrolladores de .NET usar C# para la lógica tanto del backend como del frontend, reduciendo la complejidad.</li>
+                    <li>**Rendimiento:** Blazor Server es conocido por su alto rendimiento, ideal para aplicaciones empresariales.</li>
+                    <li>**Ecosistema .NET:** Se integra de forma nativa con todo el ecosistema de Microsoft (ASP.NET Core, Entity Framework, Azure), facilitando el desarrollo de soluciones completas.</li>
+                    <li>**Código reutilizable:** La arquitectura de componentes de Razor fomenta la reutilización de código y la creación de interfaces de usuario modulares.</li>
+                </ul>
+
+                <h3 class="text-2xl font-bold text-[#005BC6] mb-4">Desventajas de Blazor</h3>
+                <ul class="list-disc list-inside text-base space-y-2 mb-6">
+                    <li>**Tamaño de descarga inicial:** Las aplicaciones Blazor WebAssembly pueden tener un tamaño inicial mayor, lo que podría afectar los tiempos de carga en conexiones lentas.</li>
+                    <li>**Curva de aprendizaje:** Aunque es intuitivo para los desarrolladores de C#, puede representar una curva de aprendizaje para aquellos nuevos en el ecosistema .NET.</li>
+                    <li>**Dependencia de Microsoft:** La tecnología está fuertemente ligada a Microsoft, lo que podría ser una desventaja para proyectos que buscan una independencia total de proveedores.</li>
+                </ul>
+
+                <h3 class="text-2xl font-bold text-[#005BC6] mb-4">Uso y Demanda</h3>
+                <p class="text-base mb-4">Blazor ha ganado tracción rápidamente, especialmente en el desarrollo de aplicaciones empresariales, dashboards y sistemas internos. La demanda de desarrolladores Blazor está creciendo, y los salarios suelen ser competitivos debido a la especialización requerida y a la importancia de los proyectos en los que se utiliza.</p>
+                <p class="text-base mb-4">Se utiliza comúnmente en entornos donde la infraestructura de .NET ya está presente, como en la banca, la salud y la manufactura, donde se valora el rendimiento, la seguridad y el robusto soporte de Microsoft.</p>
+                <p class="mt-6 text-xs text-gray-500">Referencia: *Análisis de la industria y documentación de Microsoft Docs sobre Blazor.*</p>
+            </section>
+
+
+        </main>
+
+        <footer class="text-center mt-12 py-6 border-t border-gray-300">
+            <p class="text-gray-600">&copy; 2025 Infografía Interactiva. Creado para facilitar el aprendizaje.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        document.getElementById('web-app-toggle').addEventListener('click', function() {
+            const details = document.getElementById('web-app-details');
+            details.classList.toggle('hidden');
+        });
+
+        document.getElementById('identificadores-toggle').addEventListener('click', function() {
+            document.getElementById('identificadores-details').classList.toggle('hidden');
+        });
+
+        document.getElementById('palabras-clave-toggle').addEventListener('click', function() {
+            document.getElementById('palabras-clave-details').classList.toggle('hidden');
+        });
+
+        document.getElementById('variables-toggle').addEventListener('click', function() {
+            document.getElementById('variables-details').classList.toggle('hidden');
+        });
+
+        document.getElementById('tipo-numerico-toggle').addEventListener('click', function() {
+            document.getElementById('tipo-numerico-details').classList.toggle('hidden');
+        });
+
+        document.getElementById('tipo-texto-toggle').addEventListener('click', function() {
+            document.getElementById('tipo-texto-details').classList.toggle('hidden');
+        });
+
+        document.getElementById('tipo-booleano-toggle').addEventListener('click', function() {
+            document.getElementById('tipo-booleano-details').classList.toggle('hidden');
+        });
+
+
+        const tooltipTitleCallback = {
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems[0];
+                            let label = item.chart.data.labels[item.dataIndex];
+                            if (Array.isArray(label)) {
+                                return label.join(' ');
+                            }
+                            return label;
+                        }
+                    }
+                }
+            }
+        };
+
+        const wrapLabel = (label) => {
+            const max = 16;
+            if (label.length <= max) return label;
+            const words = label.split(' ');
+            const lines = [];
+            let currentLine = '';
+            words.forEach(word => {
+                if ((currentLine + word).length > max) {
+                    lines.push(currentLine.trim());
+                    currentLine = '';
+                }
+                currentLine += word + ' ';
+            });
+            lines.push(currentLine.trim());
+            return lines;
+        };
+
+        const brilliantBlues = ['#00449E', '#005BC6', '#0076FF', '#3691FF', '#7FBCFF'];
+
+        window.onload = function() {
+            const netCoreCtx = document.getElementById('netCoreChart').getContext('2d');
+            new Chart(netCoreCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Web', 'Escritorio', 'Móviles', 'Juegos y Otros'],
+                    datasets: [{
+                        label: 'Tipos de Aplicaciones con .NET',
+                        data: [40, 25, 20, 15],
+                        backgroundColor: brilliantBlues,
+                        borderColor: '#FFFFFF',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        ...tooltipTitleCallback.plugins,
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Ecosistema de Aplicaciones .NET',
+                            font: { size: 16 }
+                        }
+                    }
+                }
+            });
+
+            
+            const blazorCtx = document.getElementById('blazorChart').getContext('2d');
+            new Chart(blazorCtx, {
+                type: 'bubble',
+                data: {
+                    datasets: [
+                        {
+                            label: 'Componentes UI (Razor)',
+                            data: [{ x: 50, y: 70, r: 25 }],
+                            backgroundColor: '#005BC6',
+                            borderColor: '#FFFFFF',
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Lógica en C#',
+                            data: [{ x: 30, y: 30, r: 20 }],
+                            backgroundColor: '#3691FF',
+                            borderColor: '#FFFFFF',
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Ejecución (Server/WebAssembly)',
+                            data: [{ x: 70, y: 30, r: 15 }],
+                            backgroundColor: '#7FBCFF',
+                            borderColor: '#FFFFFF',
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label;
+                                }
+                            }
+                        },
+                        legend: {
+                            display: true,
+                            labels: {
+                                boxWidth: 10,
+                                boxHeight: 10,
+                                usePointStyle: true
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Anatomía de una Aplicación Blazor',
+                            font: { size: 16 }
+                        }
+                    },
+                    scales: {
+                        x: { display: false },
+                        y: { display: false }
+                    }
+                }
+            });
+        };
+    </script>
+</body>
+</html>
