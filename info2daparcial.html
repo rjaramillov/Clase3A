@@ -1,0 +1,1656 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proceso de Desarrollo Web - Blazor WebAssembly</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+        
+        .main-flow {
+            display: flex;
+            justify-content: space-around;
+            padding: 40px;
+            background: #f8f9fa;
+            flex-wrap: wrap;
+        }
+        
+        .phase {
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .phase-number {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2em;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .phase h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+        
+        .arrow {
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 3em;
+            color: #667eea;
+        }
+        
+        .phase:last-child .arrow {
+            display: none;
+        }
+        
+        .section {
+            padding: 60px 40px;
+            border-top: 3px solid #f0f0f0;
+        }
+        
+        .section:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .section-title {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 20px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .card h4 {
+            color: #764ba2;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        .card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .card li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+            line-height: 1.6;
+        }
+        
+        .card li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 25px;
+            border-radius: 10px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.95em;
+            overflow-x: auto;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+            line-height: 1.8;
+            white-space: pre;
+        }
+        
+        .code-block .comment {
+            color: #75715e;
+        }
+        
+        .code-block .command {
+            color: #66d9ef;
+        }
+        
+        .code-block .string {
+            color: #a6e22e;
+        }
+        
+        .timeline {
+            position: relative;
+            padding: 40px 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            display: flex;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            flex-direction: row;
+        }
+        
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+        
+        .timeline-content {
+            flex: 1;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin: 0 30px;
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px;
+            background: white;
+            border: 5px solid #667eea;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        
+        .best-practices {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .practice-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .practice-box h4 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 10px;
+        }
+        
+        .practice-box ul {
+            list-style: none;
+        }
+        
+        .practice-box li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .practice-box li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            font-size: 1.2em;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .warning-box strong {
+            color: #856404;
+            display: block;
+            margin-bottom: 10px;
+        }
+        
+        .success-box {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .success-box strong {
+            color: #155724;
+            display: block;
+            margin-bottom: 10px;
+        }
+        
+        .tool-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            margin: 5px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        
+        .footer {
+            background: #2d2d2d;
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .footer h3 {
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .best-practices {
+                grid-template-columns: 1fr;
+            }
+            
+            .timeline::before {
+                left: 30px;
+            }
+            
+            .timeline-item {
+                flex-direction: column !important;
+            }
+            
+            .timeline-content {
+                margin-left: 60px;
+                margin-right: 0;
+            }
+            
+            .timeline-dot {
+                left: 30px;
+            }
+            
+            .arrow {
+                display: none;
+            }
+        }
+        
+        .deployment-steps {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🚀 Proceso de Desarrollo Web</h1>
+            <p>Blazor WebAssembly - De la configuración a la publicación</p>
+            <div style="margin-top: 30px;">
+                <span class="tool-badge">Visual Studio 2022</span>
+                <span class="tool-badge">Blazor WASM</span>
+                <span class="tool-badge">C# .NET</span>
+                <span class="tool-badge">Git & GitHub</span>
+                <span class="tool-badge">GitHub Pages</span>
+                <span class="tool-badge">Bootstrap/Tailwind</span>
+            </div>
+        </div>
+
+        <!-- Flujo Principal -->
+        <div class="main-flow">
+            <div class="phase">
+                <div class="phase-number">1</div>
+                <h3>Configuración del Entorno</h3>
+                <p>Instalación y preparación</p>
+                <div class="arrow">→</div>
+            </div>
+            <div class="phase">
+                <div class="phase-number">2</div>
+                <h3>Desarrollo</h3>
+                <p>Codificación y Git</p>
+                <div class="arrow">→</div>
+            </div>
+            <div class="phase">
+                <div class="phase-number">3</div>
+                <h3>Control de Versiones</h3>
+                <p>Git/GitHub Flow</p>
+                <div class="arrow">→</div>
+            </div>
+            <div class="phase">
+                <div class="phase-number">4</div>
+                <h3>Publicación</h3>
+                <p>Deploy a GitHub Pages</p>
+            </div>
+        </div>
+
+        <!-- Sección 1: Configuración del Entorno de Desarrollo -->
+        <div class="section">
+            <h2 class="section-title">⚙️ Fase 1: Configuración del Entorno de Desarrollo</h2>
+            
+            <div class="grid">
+                <div class="card">
+                    <h4><span class="card-icon">VS</span>Visual Studio 2022</h4>
+                    <ul>
+                        <li>Descargar Community Edition (gratuita)</li>
+                        <li>Seleccionar carga de trabajo: "Desarrollo web y ASP.NET"</li>
+                        <li>Incluye herramientas para Blazor automáticamente</li>
+                        <li>Integración nativa con Git y GitHub</li>
+                    </ul>
+                    <div class="code-block">
+<span class="comment"># URL de descarga oficial:</span>
+visualstudio.microsoft.com/vs/community/
+
+<span class="comment"># Características incluidas:</span>
+<span class="string">✓ IntelliSense (autocompletado inteligente)</span>
+<span class="string">✓ Depurador avanzado (breakpoints)</span>
+<span class="string">✓ NuGet (gestor de paquetes)</span>
+<span class="string">✓ Integración con Git</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><span class="card-icon">🔥</span>Crear Proyecto Blazor</h4>
+                    <ul>
+                        <li>Abrir Visual Studio 2022</li>
+                        <li>Seleccionar "Crear un nuevo proyecto"</li>
+                        <li>Buscar plantilla: "Blazor App"</li>
+                        <li><strong>Elegir: Blazor WebAssembly</strong></li>
+                        <li>Configurar nombre y ubicación</li>
+                    </ul>
+                    <div class="warning-box">
+                        <strong>⚠️ Importante:</strong>
+                        Asegúrate de seleccionar <strong>Blazor WebAssembly</strong> (no Blazor Server) para que la aplicación funcione en el navegador sin necesidad de servidor.
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><span class="card-icon">Git</span>Instalar Git</h4>
+                    <ul>
+                        <li>Descargar de git-scm.com</li>
+                        <li>Instalar con configuración por defecto</li>
+                        <li>Verificar instalación con: <code>git --version</code></li>
+                        <li>Configurar identidad global</li>
+                    </ul>
+                    <div class="code-block">
+<span class="comment"># Configurar Git (solo primera vez)</span>
+<span class="command">git config --global user.name</span> <span class="string">"Tu Nombre"</span>
+<span class="command">git config --global user.email</span> <span class="string">"tu@email.com"</span>
+
+<span class="comment"># Verificar configuración</span>
+<span class="command">git config --list</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><span class="card-icon">📦</span>Estructura de Blazor</h4>
+                    <ul>
+                        <li><strong>Pages/</strong> - Páginas principales (.razor)</li>
+                        <li><strong>Shared/</strong> - Componentes reutilizables</li>
+                        <li><strong>wwwroot/</strong> - Archivos estáticos (CSS, JS, imágenes)</li>
+                        <li><strong>Program.cs</strong> - Punto de entrada de la app</li>
+                        <li><strong>_Imports.razor</strong> - Referencias globales</li>
+                    </ul>
+                    <div class="success-box">
+                        <strong>✅ Ventaja de Blazor WASM:</strong>
+                        El código C# se compila a WebAssembly y corre directamente en el navegador, permitiendo aplicaciones offline y sin dependencia del servidor.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección 2: Desarrollo y Mejores Prácticas -->
+        <div class="section">
+            <h2 class="section-title">💻 Fase 2: Desarrollo con Mejores Prácticas</h2>
+
+            <div class="best-practices">
+                <div class="practice-box">
+                    <h4>📋 Código Limpio</h4>
+                    <ul>
+                        <li>Usar nombres descriptivos para componentes</li>
+                        <li>Aplicar metodología BEM para clases CSS</li>
+                        <li>Mantener componentes pequeños y enfocados</li>
+                        <li>Separar lógica de negocio de la presentación</li>
+                        <li>Documentar código complejo con comentarios</li>
+                        <li>Evitar código duplicado (principio DRY)</li>
+                    </ul>
+                </div>
+
+                <div class="practice-box">
+                    <h4>🎨 Diseño Responsivo</h4>
+                    <ul>
+                        <li>Usar Bootstrap o Tailwind CSS</li>
+                        <li>Diseño mobile-first</li>
+                        <li>Optimizar imágenes para web</li>
+                        <li>Minimizar CSS y JavaScript</li>
+                        <li>Probar en múltiples dispositivos</li>
+                        <li>Implementar diseño adaptable (flexbox/grid)</li>
+                    </ul>
+                </div>
+
+                <div class="practice-box">
+                    <h4>⚡ Rendimiento</h4>
+                    <ul>
+                        <li>Cargar solo componentes necesarios</li>
+                        <li>Usar lazy loading para rutas</li>
+                        <li>Optimizar tamaño de archivos estáticos</li>
+                        <li>Comprimir recursos (CSS, JS)</li>
+                        <li>Evitar re-renderizados innecesarios</li>
+                        <li>Implementar caché de datos cuando sea posible</li>
+                    </ul>
+                </div>
+
+                <div class="practice-box">
+                    <h4>🔒 Seguridad</h4>
+                    <ul>
+                        <li>Validar entradas del usuario</li>
+                        <li>No exponer información sensible en el código</li>
+                        <li>Usar HTTPS para producción</li>
+                        <li>Implementar autenticación correctamente</li>
+                        <li>Mantener dependencias actualizadas</li>
+                        <li>Proteger contra XSS y CSRF</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Nueva Sección: Metodologías CSS Detalladas -->
+            <div style="margin-top: 60px;">
+                <h3 style="color: #667eea; font-size: 2em; margin-bottom: 30px; text-align: center;">
+                    📐 Metodologías de CSS - Guía Detallada
+                </h3>
+
+                <!-- BEM Methodology -->
+                <div class="card" style="margin-bottom: 30px;">
+                    <h4><span class="card-icon">B</span>Metodología BEM (Block Element Modifier)</h4>
+                    <p style="margin-bottom: 20px; color: #666; line-height: 1.8;">
+                        <strong>BEM</strong> es una convención de nombres para CSS que hace tu código más legible, escalable y mantenible. 
+                        La estructura es: <code>bloque__elemento--modificador</code>
+                    </p>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                        <div>
+                            <strong style="color: #764ba2;">❌ FORMA INCORRECTA:</strong>
+                            <div class="code-block">
+<span class="comment">/* CSS desordenado y confuso */</span>
+.<span class="string">card</span> { }
+.<span class="string">title</span> { }
+.<span class="string">red</span> { }
+.<span class="string">big</span> { }
+.<span class="string">button1</span> { }
+                            </div>
+                        </div>
+                        <div>
+                            <strong style="color: #667eea;">✅ FORMA CORRECTA (BEM):</strong>
+                            <div class="code-block">
+<span class="comment">/* CSS organizado con BEM */</span>
+.<span class="string">card</span> { }
+.<span class="string">card__title</span> { }
+.<span class="string">card__title--highlighted</span> { }
+.<span class="string">card__button</span> { }
+.<span class="string">card__button--primary</span> { }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="success-box">
+                        <strong>💡 Ejemplo Completo con BEM:</strong>
+                        <div class="code-block" style="margin-top: 15px;">
+<span class="comment">/* ===== BLOQUE: Tarjeta de Producto ===== */</span>
+.<span class="string">product-card</span> {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+<span class="comment">/* ===== ELEMENTOS: Partes de la tarjeta ===== */</span>
+.<span class="string">product-card__image</span> {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.<span class="string">product-card__title</span> {
+    font-size: 1.5em;
+    color: #333;
+    margin: 15px 0 10px;
+}
+
+.<span class="string">product-card__description</span> {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.<span class="string">product-card__price</span> {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #667eea;
+}
+
+.<span class="string">product-card__button</span> {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+<span class="comment">/* ===== MODIFICADORES: Variaciones ===== */</span>
+.<span class="string">product-card--featured</span> {
+    border: 3px solid #667eea;
+    background: linear-gradient(135deg, #f5f7ff 0%, #ffffff 100%);
+}
+
+.<span class="string">product-card__button--primary</span> {
+    background: #667eea;
+    color: white;
+}
+
+.<span class="string">product-card__button--secondary</span> {
+    background: transparent;
+    color: #667eea;
+    border: 2px solid #667eea;
+}
+
+.<span class="string">product-card__button--disabled</span> {
+    background: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                        <strong style="color: #667eea; font-size: 1.1em;">📝 Uso en HTML:</strong>
+                        <div class="code-block" style="margin-top: 10px;">
+<span class="comment">&lt;!-- Tarjeta normal --&gt;</span>
+<span class="string">&lt;div class="product-card"&gt;</span>
+    <span class="string">&lt;img class="product-card__image" src="producto.jpg" alt="Producto"&gt;</span>
+    <span class="string">&lt;h3 class="product-card__title"&gt;</span>Laptop Gaming<span class="string">&lt;/h3&gt;</span>
+    <span class="string">&lt;p class="product-card__description"&gt;</span>Potente laptop para juegos<span class="string">&lt;/p&gt;</span>
+    <span class="string">&lt;p class="product-card__price"&gt;</span>$999.99<span class="string">&lt;/p&gt;</span>
+    <span class="string">&lt;button class="product-card__button product-card__button--primary"&gt;</span>
+        Comprar
+    <span class="string">&lt;/button&gt;</span>
+<span class="string">&lt;/div&gt;</span>
+
+<span class="comment">&lt;!-- Tarjeta destacada --&gt;</span>
+<span class="string">&lt;div class="product-card product-card--featured"&gt;</span>
+    <span class="comment">&lt;!-- ... contenido ... --&gt;</span>
+<span class="string">&lt;/div&gt;</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile First -->
+                <div class="card" style="margin-bottom: 30px;">
+                    <h4><span class="card-icon">📱</span>Diseño Mobile-First</h4>
+                    <p style="margin-bottom: 20px; color: #666; line-height: 1.8;">
+                        <strong>Mobile-First</strong> significa diseñar primero para dispositivos móviles y luego escalar hacia pantallas más grandes. 
+                        Usa <code>min-width</code> en tus media queries.
+                    </p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                        <div>
+                            <strong style="color: #764ba2;">❌ Desktop-First (No recomendado):</strong>
+                            <div class="code-block">
+<span class="comment">/* Diseño escritorio primero */</span>
+.<span class="string">container</span> {
+    width: 1200px; <span class="comment">/* Problema en móvil! */</span>
+    display: grid;
+    grid-template-columns: <span class="string">repeat(4, 1fr)</span>;
+}
+
+<span class="comment">/* Luego adaptar a móvil */</span>
+@media (<span class="command">max-width</span>: 768px) {
+    .<span class="string">container</span> {
+        width: 100%;
+        grid-template-columns: <span class="string">1fr</span>;
+    }
+}
+                            </div>
+                        </div>
+                        <div>
+                            <strong style="color: #667eea;">✅ Mobile-First (Recomendado):</strong>
+                            <div class="code-block">
+<span class="comment">/* Diseño móvil primero */</span>
+.<span class="string">container</span> {
+    width: 100%;
+    padding: 15px;
+    display: grid;
+    grid-template-columns: <span class="string">1fr</span>;
+    gap: 15px;
+}
+
+<span class="comment">/* Luego escalar a tablet */</span>
+@media (<span class="command">min-width</span>: 768px) {
+    .<span class="string">container</span> {
+        grid-template-columns: <span class="string">repeat(2, 1fr)</span>;
+        gap: 20px;
+    }
+}
+
+<span class="comment">/* Y desktop */</span>
+@media (<span class="command">min-width</span>: 1200px) {
+    .<span class="string">container</span> {
+        max-width: 1200px;
+        margin: 0 auto;
+        grid-template-columns: <span class="string">repeat(4, 1fr)</span>;
+        gap: 30px;
+    }
+}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="success-box">
+                        <strong>💡 Ejemplo Completo Mobile-First:</strong>
+                        <div class="code-block" style="margin-top: 15px;">
+<span class="comment">/* ===== ESTILOS BASE (Móvil) ===== */</span>
+.<span class="string">navigation</span> {
+    display: flex;
+    flex-direction: column; <span class="comment">/* Menú vertical en móvil */</span>
+    padding: 10px;
+    background: #667eea;
+}
+
+.<span class="string">navigation__item</span> {
+    padding: 15px;
+    text-align: center;
+    color: white;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.<span class="string">hero-section</span> {
+    padding: 30px 15px;
+    text-align: center;
+}
+
+.<span class="string">hero-section__title</span> {
+    font-size: 1.8em; <span class="comment">/* Tamaño móvil */</span>
+    line-height: 1.3;
+}
+
+.<span class="string">hero-section__image</span> {
+    width: 100%;
+    max-width: 300px;
+    margin: 20px auto;
+}
+
+<span class="comment">/* ===== TABLET (768px+) ===== */</span>
+@media (<span class="command">min-width</span>: 768px) {
+    .<span class="string">navigation</span> {
+        flex-direction: row; <span class="comment">/* Menú horizontal */</span>
+        justify-content: space-between;
+        padding: 15px 30px;
+    }
+    
+    .<span class="string">navigation__item</span> {
+        border-bottom: none;
+        padding: 10px 20px;
+    }
+    
+    .<span class="string">hero-section__title</span> {
+        font-size: 2.5em; <span class="comment">/* Más grande en tablet */</span>
+    }
+    
+    .<span class="string">hero-section__image</span> {
+        max-width: 500px;
+    }
+}
+
+<span class="comment">/* ===== DESKTOP (1200px+) ===== */</span>
+@media (<span class="command">min-width</span>: 1200px) {
+    .<span class="string">hero-section</span> {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+        text-align: left;
+    }
+    
+    .<span class="string">hero-section__title</span> {
+        font-size: 3.5em; <span class="comment">/* Aún más grande */</span>
+    }
+    
+    .<span class="string">hero-section__image</span> {
+        max-width: 600px;
+    }
+}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Variables CSS -->
+                <div class="card" style="margin-bottom: 30px;">
+                    <h4><span class="card-icon">🎨</span>Variables CSS (Custom Properties)</h4>
+                    <p style="margin-bottom: 20px; color: #666; line-height: 1.8;">
+                        Las <strong>variables CSS</strong> permiten reutilizar valores y mantener consistencia en el diseño. 
+                        Se definen con <code>--nombre-variable</code> y se usan con <code>var(--nombre-variable)</code>.
+                    </p>
+
+                    <div class="success-box">
+                        <strong>💡 Sistema de Variables Completo:</strong>
+                        <div class="code-block" style="margin-top: 15px;">
+<span class="comment">/* ===== DEFINIR VARIABLES GLOBALES ===== */</span>
+<span class="command">:root</span> {
+    <span class="comment">/* Colores Principales */</span>
+    <span class="string">--color-primary</span>: #667eea;
+    <span class="string">--color-primary-dark</span>: #5568d3;
+    <span class="string">--color-primary-light</span>: #7c94ff;
+    
+    <span class="string">--color-secondary</span>: #764ba2;
+    <span class="string">--color-accent</span>: #f093fb;
+    
+    <span class="comment">/* Colores de Estado */</span>
+    <span class="string">--color-success</span>: #28a745;
+    <span class="string">--color-warning</span>: #ffc107;
+    <span class="string">--color-danger</span>: #dc3545;
+    <span class="string">--color-info</span>: #17a2b8;
+    
+    <span class="comment">/* Colores de Texto */</span>
+    <span class="string">--text-primary</span>: #333333;
+    <span class="string">--text-secondary</span>: #666666;
+    <span class="string">--text-muted</span>: #999999;
+    
+    <span class="comment">/* Fondos */</span>
+    <span class="string">--bg-primary</span>: #ffffff;
+    <span class="string">--bg-secondary</span>: #f8f9fa;
+    <span class="string">--bg-dark</span>: #2d2d2d;
+    
+    <span class="comment">/* Espaciados */</span>
+    <span class="string">--spacing-xs</span>: 5px;
+    <span class="string">--spacing-sm</span>: 10px;
+    <span class="string">--spacing-md</span>: 20px;
+    <span class="string">--spacing-lg</span>: 40px;
+    <span class="string">--spacing-xl</span>: 60px;
+    
+    <span class="comment">/* Tipografía */</span>
+    <span class="string">--font-primary</span>: 'Segoe UI', Tahoma, sans-serif;
+    <span class="string">--font-code</span>: 'Consolas', 'Monaco', monospace;
+    
+    <span class="string">--font-size-xs</span>: 0.75rem;
+    <span class="string">--font-size-sm</span>: 0.875rem;
+    <span class="string">--font-size-base</span>: 1rem;
+    <span class="string">--font-size-lg</span>: 1.25rem;
+    <span class="string">--font-size-xl</span>: 1.5rem;
+    <span class="string">--font-size-2xl</span>: 2rem;
+    <span class="string">--font-size-3xl</span>: 3rem;
+    
+    <span class="comment">/* Bordes */</span>
+    <span class="string">--border-radius-sm</span>: 5px;
+    <span class="string">--border-radius-md</span>: 10px;
+    <span class="string">--border-radius-lg</span>: 15px;
+    <span class="string">--border-radius-full</span>: 50%;
+    
+    <span class="comment">/* Sombras */</span>
+    <span class="string">--shadow-sm</span>: 0 2px 4px rgba(0,0,0,0.1);
+    <span class="string">--shadow-md</span>: 0 4px 6px rgba(0,0,0,0.1);
+    <span class="string">--shadow-lg</span>: 0 10px 25px rgba(0,0,0,0.15);
+    <span class="string">--shadow-xl</span>: 0 20px 40px rgba(0,0,0,0.2);
+    
+    <span class="comment">/* Transiciones */</span>
+    <span class="string">--transition-fast</span>: 0.15s ease;
+    <span class="string">--transition-base</span>: 0.3s ease;
+    <span class="string">--transition-slow</span>: 0.5s ease;
+}
+
+<span class="comment">/* ===== USAR LAS VARIABLES ===== */</span>
+.<span class="string">button</span> {
+    background: <span class="command">var(--color-primary)</span>;
+    color: white;
+    padding: <span class="command">var(--spacing-sm)</span> <span class="command">var(--spacing-md)</span>;
+    border: none;
+    border-radius: <span class="command">var(--border-radius-sm)</span>;
+    font-family: <span class="command">var(--font-primary)</span>;
+    font-size: <span class="command">var(--font-size-base)</span>;
+    box-shadow: <span class="command">var(--shadow-md)</span>;
+    transition: all <span class="command">var(--transition-base)</span>;
+    cursor: pointer;
+}
+
+.<span class="string">button:hover</span> {
+    background: <span class="command">var(--color-primary-dark)</span>;
+    transform: translateY(-2px);
+    box-shadow: <span class="command">var(--shadow-lg)</span>;
+}
+
+.<span class="string">card</span> {
+    background: <span class="command">var(--bg-primary)</span>;
+    padding: <span class="command">var(--spacing-lg)</span>;
+    border-radius: <span class="command">var(--border-radius-lg)</span>;
+    box-shadow: <span class="command">var(--shadow-md)</span>;
+    margin-bottom: <span class="command">var(--spacing-md)</span>;
+}
+
+.<span class="string">card__title</span> {
+    color: <span class="command">var(--text-primary)</span>;
+    font-size: <span class="command">var(--font-size-xl)</span>;
+    margin-bottom: <span class="command">var(--spacing-sm)</span>;
+}
+
+.<span class="string">card__text</span> {
+    color: <span class="command">var(--text-secondary)</span>;
+    font-size: <span class="command">var(--font-size-base)</span>;
+    line-height: 1.6;
+}
+
+<span class="comment">/* ===== TEMA OSCURO (Opcional) ===== */</span>
+<span class="command">[data-theme="dark"]</span> {
+    <span class="string">--bg-primary</span>: #1a1a1a;
+    <span class="string">--bg-secondary</span>: #2d2d2d;
+    <span class="string">--text-primary</span>: #ffffff;
+    <span class="string">--text-secondary</span>: #cccccc;
+}
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 20px; padding: 20px; background: #e8f4fd; border-left: 4px solid #17a2b8; border-radius: 5px;">
+                        <strong style="color: #0c5460;">🎯 Ventajas de usar Variables CSS:</strong>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>✅ Cambios globales con una sola modificación</li>
+                            <li>✅ Código más mantenible y organizado</li>
+                            <li>✅ Fácil implementación de temas (claro/oscuro)</li>
+                            <li>✅ Consistencia en todo el diseño</li>
+                            <li>✅ Mejor colaboración en equipo</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Flexbox vs Grid -->
+                <div class="card" style="margin-bottom: 30px;">
+                    <h4><span class="card-icon">📦</span>Flexbox vs CSS Grid - ¿Cuándo usar cada uno?</h4>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px;">
+                        <div>
+                            <h5 style="color: #667eea; margin-bottom: 15px;">🔷 Flexbox - Diseño en 1 Dimensión</h5>
+                            <p style="color: #666; margin-bottom: 15px;">
+                                Ideal para: menús, barras de navegación, centrar elementos, alinear items en fila o columna.
+                            </p>
+                            <div class="code-block">
+<span class="comment">/* Menú de Navegación */</span>
+.<span class="string">navbar</span> {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+}
+
+.<span class="string">navbar__menu</span> {
+    display: flex;
+    gap: 20px;
+}
+
+<span class="comment">/* Botones en línea */</span>
+.<span class="string">button-group</span> {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+<span class="comment">/* Centrar contenido */</span>
+.<span class="string">hero</span> {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+<span class="comment">/* Card con Flex */</span>
+.<span class="string">card</span> {
+    display: flex;
+    gap: 20px;
+}
+
+.<span class="string">card__image</span> {
+    flex: 0 0 200px;
+}
+
+.<span class="string">card__content</span> {
+    flex: 1;
+}
+                            </div>
+                        </div>
+
+                        <div>
+                            <h5 style="color: #764ba2; margin-bottom: 15px;">🔶 CSS Grid - Diseño en 2 Dimensiones</h5>
+                            <p style="color: #666; margin-bottom: 15px;">
+                                Ideal para: layouts completos, galerías, dashboards, diseños complejos con filas y columnas.
+                            </p>
+                            <div class="code-block">
+<span class="comment">/* Layout Principal */</span>
+.<span class="string">layout</span> {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    grid-template-rows: 60px 1fr 50px;
+    grid-template-areas:
+        "<span class="string">header header</span>"
+        "<span class="string">sidebar main</span>"
+        "<span class="string">footer footer</span>";
+    min-height: 100vh;
+}
+
+.<span class="string">header</span> { grid-area: header; }
+.<span class="string">sidebar</span> { grid-area: sidebar; }
+.<span class="string">main</span> { grid-area: main; }
+.<span class="string">footer</span> { grid-area: footer; }
+
+<span class="comment">/* Galería de Productos */</span>
+.<span class="string">product-grid</span> {
+    display: grid;
+    grid-template-columns: <span class="command">repeat(auto-fit, minmax(250px, 1fr))</span>;
+    gap: 30px;
+    padding: 20px;
+}
+
+<span class="comment">/* Dashboard Complejo */</span>
+.<span class="string">dashboard</span> {
+    display: grid;
+    grid-template-columns: <span class="command">repeat(12, 1fr)</span>;
+    gap: 20px;
+}
+
+.<span class="string">widget--large</span> {
+    grid-column: <span class="command">span 8</span>;
+}
+
+.<span class="string">widget--small</span> {
+    grid-column: <span class="command">span 4</span>;
+}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="success-box" style="margin-top: 20px;">
+                        <strong>💡 Combinando Flexbox y Grid:</strong>
+                        <div class="code-block" style="margin-top: 15px;">
+<span class="comment">/* Grid para el layout general */</span>
+.<span class="string">page</span> {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+}
+
+<span class="comment">/* Flexbox para componentes internos */</span>
+.<span class="string">card</span> {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.<span class="string">card__header</span> {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.<span class="string">card__actions</span> {
+    display: flex;
+    gap: 10px;
+    margin-top: auto; <span class="comment">/* Empuja botones al final */</span>
+}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabla Comparativa -->
+                <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <h4 style="color: #667eea; margin-bottom: 20px; text-align: center;">📊 Tabla Comparativa de Metodologías</h4>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                                <th style="padding: 15px; text-align: left;">Metodología</th>
+                                <th style="padding: 15px; text-align: left;">Cuándo Usar</th>
+                                <th style="padding: 15px; text-align: left;">Ventajas</th>
+                                <th style="padding: 15px; text-align: left;">Desventajas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 15px;"><strong>BEM</strong></td>
+                                <td style="padding: 15px;">Proyectos grandes con equipos</td>
+                                <td style="padding: 15px;">Código muy organizado y escalable</td>
+                                <td style="padding: 15px;">Nombres de clases largos</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #eee; background: #f8f9fa;">
+                                <td style="padding: 15px;"><strong>Mobile-First</strong></td>
+                                <td style="padding: 15px;">Todos los proyectos web modernos</td>
+                                <td style="padding: 15px;">Mejor rendimiento en móviles</td>
+                                <td style="padding: 15px;">Requiere cambio de mentalidad</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 15px;"><strong>Variables CSS</strong></td>
+                                <td style="padding: 15px;">Proyectos con diseño consistente</td>
+                                <td style="padding: 15px;">Cambios globales fáciles</td>
+                                <td style="padding: 15px;">Requiere IE 11+ o navegadores modernos</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #eee; background: #f8f9fa;">
+                                <td style="padding: 15px;"><strong>Flexbox</strong></td>
+                                <td style="padding: 15px;">Layouts 1D (menús, filas, columnas)</td>
+                                <td style="padding: 15px;">Simple y poderoso</td>
+                                <td style="padding: 15px;">No ideal para layouts 2D complejos</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 15px;"><strong>CSS Grid</strong></td>
+                                <td style="padding: 15px;">Layouts 2D complejos</td>
+                                <td style="padding: 15px;">Control total del layout</td>
+                                <td style="padding: 15px;">Curva de aprendizaje más alta</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="grid" style="margin-top: 40px;">
+                <div class="card">
+                    <h4><span class="card-icon">🎯</span>Estructura de Archivos</h4>
+                    <div class="code-block">
+<span class="string">MiProyectoBlazor/</span>
+│
+├── <span class="string">Pages/</span>
+│   ├── Index.razor          <span class="comment"># Página principal</span>
+│   ├── Counter.razor        <span class="comment"># Ejemplo contador</span>
+│   └── FetchData.razor      <span class="comment"># Ejemplo datos</span>
+│
+├── <span class="string">Shared/</span>
+│   ├── NavMenu.razor        <span class="comment"># Menú navegación</span>
+│   └── MainLayout.razor     <span class="comment"># Layout principal</span>
+│
+├── <span class="string">wwwroot/</span>
+│   ├── <span class="string">css/</span>
+│   │   └── app.css          <span class="comment"># Estilos personalizados</span>
+│   ├── <span class="string">images/</span>          <span class="comment"># Imágenes</span>
+│   └── index.html           <span class="comment"># HTML principal</span>
+│
+└── Program.cs               <span class="comment"># Configuración app</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4><span class="card-icon">🔧</span>Ejemplo Componente Blazor</h4>
+                    <div class="code-block">
+<span class="comment">@* Archivo: MiComponente.razor *@</span>
+<span class="command">@page "/mi-pagina"</span>
+
+<span class="string">&lt;h3&gt;Mi Componente&lt;/h3&gt;</span>
+
+<span class="string">&lt;button @onclick="IncrementCount"&gt;</span>
+    Clic aquí
+<span class="string">&lt;/button&gt;</span>
+
+<span class="string">&lt;p&gt;Contador: @currentCount&lt;/p&gt;</span>
+
+<span class="command">@code</span> {
+    <span class="command">private int</span> currentCount = <span class="string">0</span>;
+
+    <span class="command">private void</span> IncrementCount()
+    {
+        currentCount++;
+    }
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección 3: Control de Versiones con Git/GitHub -->
+        <div class="section">
+            <h2 class="section-title">🔄 Fase 3: Control de Versiones con Git y GitHub</h2>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4>1. Inicializar Repositorio Local</h4>
+                        <div class="code-block">
+<span class="comment"># Abrir terminal en la carpeta del proyecto</span>
+<span class="command">git init</span>
+
+<span class="comment"># Verificar estado</span>
+<span class="command">git status</span>
+
+<span class="comment"># Cambiar nombre de rama a 'main'</span>
+<span class="command">git branch -M main</span>
+                        </div>
+                        <p style="margin-top: 15px;">Esto crea un repositorio Git local en tu proyecto para empezar a versionar el código.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4>2. Crear Repositorio en GitHub</h4>
+                        <ul style="margin-top: 15px;">
+                            <li>Ir a github.com y hacer login</li>
+                            <li>Click en "New repository"</li>
+                            <li>Nombre del repositorio (ej: mi-proyecto-blazor)</li>
+                            <li>Elegir "Public" (necesario para GitHub Pages gratuito)</li>
+                            <li>NO inicializar con README (ya tienes código local)</li>
+                            <li>Click en "Create repository"</li>
+                        </ul>
+                        <div class="warning-box" style="margin-top: 15px;">
+                            <strong>⚠️ Importante:</strong>
+                            El repositorio debe ser <strong>público</strong> para usar GitHub Pages gratis.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4>3. Primer Commit y Push</h4>
+                        <div class="code-block">
+<span class="comment"># Añadir todos los archivos al staging</span>
+<span class="command">git add .</span>
+
+<span class="comment"># Crear el primer commit</span>
+<span class="command">git commit -m</span> <span class="string">"Initial commit: Proyecto Blazor WASM"</span>
+
+<span class="comment"># Conectar con repositorio remoto</span>
+<span class="command">git remote add origin</span> https://github.com/tu-usuario/tu-repo.git
+
+<span class="comment"># Subir código a GitHub</span>
+<span class="command">git push -u origin main</span>
+                        </div>
+                        <div class="success-box" style="margin-top: 15px;">
+                            <strong>✅ Buena Práctica:</strong>
+                            Los commits deben ser descriptivos y específicos: "Añade componente de login" en lugar de "cambios varios".
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4>4. Flujo de Trabajo con Ramas</h4>
+                        <div class="code-block">
+<span class="comment"># Crear rama para nueva característica</span>
+<span class="command">git checkout -b</span> <span class="string">feature/nueva-funcionalidad</span>
+
+<span class="comment"># Hacer cambios y commits</span>
+<span class="command">git add .</span>
+<span class="command">git commit -m</span> <span class="string">"Añade nueva funcionalidad X"</span>
+
+<span class="comment"># Subir rama al repositorio remoto</span>
+<span class="command">git push origin</span> <span class="string">feature/nueva-funcionalidad</span>
+
+<span class="comment"># Volver a la rama main</span>
+<span class="command">git checkout main</span>
+
+<span class="comment"># Actualizar desde remoto</span>
+<span class="command">git pull origin main</span>
+
+<span class="comment"># Fusionar cambios (después del Pull Request)</span>
+<span class="command">git merge</span> <span class="string">feature/nueva-funcionalidad</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4>5. Pull Requests y Revisión de Código</h4>
+                        <p style="margin-bottom: 15px;"><strong>Proceso en GitHub:</strong></p>
+                        <ul>
+                            <li><strong>Paso 1:</strong> Ir al repositorio en GitHub</li>
+                            <li><strong>Paso 2:</strong> Click en "Pull requests" → "New pull request"</li>
+                            <li><strong>Paso 3:</strong> Seleccionar base: main ← compare: tu-rama</li>
+                            <li><strong>Paso 4:</strong> Título descriptivo y descripción detallada</li>
+                            <li><strong>Paso 5:</strong> Enlazar Issues relacionados (Closes #123)</li>
+                            <li><strong>Paso 6:</strong> Solicitar revisores (si trabajas en equipo)</li>
+                            <li><strong>Paso 7:</strong> Resolver comentarios y conflictos</li>
+                            <li><strong>Paso 8:</strong> Merge con estrategia "Squash and merge"</li>
+                        </ul>
+                        <div class="success-box" style="margin-top: 15px;">
+                            <strong>✅ Ventajas del PR:</strong>
+                            Historial limpio, revisión de código, detección temprana de errores y mejor comunicación en equipo.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4>6. Issues y Gestión de Tareas</h4>
+                        <div class="code-block">
+<span class="comment"># Flujo completo con Issues:</span>
+
+<span class="string">1. Crear Issue en GitHub</span>
+   - Título: "Implementar formulario de contacto"
+   - Descripción detallada
+   - Asignar labels: enhancement, high priority
+   
+<span class="string">2. Crear rama desde el Issue</span>
+   <span class="command">git checkout -b</span> <span class="string">feat/formulario-contacto-#15</span>
+   
+<span class="string">3. Desarrollar y hacer commits</span>
+   <span class="command">git commit -m</span> <span class="string">"feat: añade validación email #15"</span>
+   
+<span class="string">4. Crear Pull Request</span>
+   - Mencionar: "Closes #15" en la descripción
+   
+<span class="string">5. Al hacer merge, el Issue se cierra automáticamente</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="best-practices" style="margin-top: 50px;">
+                <div class="practice-box">
+                    <h4>📝 Buenas Prácticas de Git</h4>
+                    <ul>
+                        <li>Commits pequeños y atómicos (un cambio por commit)</li>
+                        <li>Mensajes descriptivos siguiendo convención</li>
+                        <li>Ramas con nombres claros: feature/, fix/, hotfix/</li>
+                        <li>Pull desde remoto antes de empezar a trabajar</li>
+                        <li>Nunca hacer push directo a main (usar PRs)</li>
+                        <li>Resolver conflictos localmente antes de push</li>
+                    </ul>
+                </div>
+
+                <div class="practice-box">
+                    <h4>🚫 Errores Comunes a Evitar</h4>
+                    <ul>
+                        <li>No hacer commit de archivos generados (bin/, obj/)</li>
+                        <li>Usar .gitignore desde el inicio del proyecto</li>
+                        <li>No subir credenciales o información sensible</li>
+                        <li>Evitar commits genéricos: "cambios", "fix"</li>
+                        <li>No mezclar múltiples cambios en un commit</li>
+                        <li>Probar localmente antes de hacer push</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección 4: Publicación en GitHub Pages -->
+        <div class="section">
+            <h2 class="section-title">🌐 Fase 4: Publicación en GitHub Pages</h2>
+
+            <div class="deployment-steps">
+                <h3 style="color: #667eea; margin-bottom: 30px; font-size: 1.8em;">Preparación para Deployment</h3>
+                
+                <div style="margin-bottom: 30px;">
+                    <p><span class="step-number">1</span><strong>Modificar configuración de Blazor WASM</strong></p>
+                    <p style="margin-left: 50px; margin-top: 10px; color: #666;">En el archivo <code>wwwroot/index.html</code>, ajustar la base href:</p>
+                    <div class="code-block">
+<span class="comment">&lt;!-- Para GitHub Pages --&gt;</span>
+<span class="string">&lt;base href="/nombre-de-tu-repo/" /&gt;</span>
+
+<span class="comment">&lt;!-- Ejemplo: si tu repo se llama 'mi-portfolio' --&gt;</span>
+<span class="string">&lt;base href="/mi-portfolio/" /&gt;</span>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <p><span class="step-number">2</span><strong>Compilar el proyecto para producción</strong></p>
+                    <p style="margin-left: 50px; margin-top: 10px; color: #666;">En Visual Studio o terminal:</p>
+                    <div class="code-block">
+<span class="comment"># Desde la terminal en la carpeta del proyecto</span>
+<span class="command">dotnet publish -c Release -o publish</span>
+
+<span class="comment"># Los archivos compilados estarán en:</span>
+<span class="string">publish/wwwroot/</span>
+                    </div>
+                    <div class="warning-box" style="margin-left: 50px;">
+                        <strong>⚠️ Importante:</strong>
+                        Todo el contenido que subirás a GitHub Pages está dentro de la carpeta <strong>publish/wwwroot/</strong>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <p><span class="step-number">3</span><strong>Crear archivo .nojekyll</strong></p>
+                    <p style="margin-left: 50px; margin-top: 10px; color: #666;">GitHub Pages usa Jekyll por defecto, pero necesitamos desactivarlo para Blazor:</p>
+                    <div class="code-block">
+<span class="comment"># En la carpeta publish/wwwroot/, crear archivo vacío .nojekyll</span>
+
+<span class="comment"># En Windows (PowerShell):</span>
+<span class="command">New-Item</span> publish/wwwroot/.nojekyll -ItemType File
+
+<span class="comment"># En Linux/Mac:</span>
+<span class="command">touch</span> publish/wwwroot/.nojekyll
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <p><span class="step-number">4</span><strong>Crear rama gh-pages y subir archivos</strong></p>
+                    <div class="code-block">
+<span class="comment"># Crear rama gh-pages vacía</span>
+<span class="command">git checkout --orphan gh-pages</span>
+
+<span class="comment"># Eliminar todos los archivos del staging</span>
+<span class="command">git rm -rf .</span>
+
+<span class="comment"># Copiar archivos compilados de wwwroot a la raíz</span>
+<span class="comment"># (Copia manualmente el contenido de publish/wwwroot/ a la raíz del proyecto)</span>
+
+<span class="comment"># Añadir todos los archivos</span>
+<span class="command">git add .</span>
+
+<span class="comment"># Crear commit</span>
+<span class="command">git commit -m</span> <span class="string">"Deploy: Publicación inicial en GitHub Pages"</span>
+
+<span class="comment"># Subir rama gh-pages</span>
+<span class="command">git push origin gh-pages</span>
+
+<span class="comment"># Volver a la rama main</span>
+<span class="command">git checkout main</span>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <p><span class="step-number">5</span><strong>Configurar GitHub Pages en el repositorio</strong></p>
+                    <ul style="margin-left: 50px; margin-top: 10px;">
+                        <li>Ir a tu repositorio en GitHub</li>
+                        <li>Click en "Settings" (Configuración)</li>
+                        <li>En el menú lateral, click en "Pages"</li>
+                        <li>En "Source", seleccionar: <strong>gh-pages</strong> branch</li>
+                        <li>Dejar en "/(root)" folder</li>
+                        <li>Click en "Save"</li>
+                        <li>Esperar 1-2 minutos para el despliegue</li>
+                    </ul>
+                    <div class="success-box" style="margin-left: 50px; margin-top: 15px;">
+                        <strong>✅ ¡Listo!</strong>
+                        Tu aplicación estará disponible en: <br>
+                        <code>https://tu-usuario.github.io/nombre-repo/</code>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <p><span class="step-number">6</span><strong>Automatización con GitHub Actions (Opcional pero Recomendado)</strong></p>
+                    <p style="margin-left: 50px; margin-top: 10px; color: #666;">Crea el archivo <code>.github/workflows/deploy.yml</code>:</p>
+                    <div class="code-block">
+<span class="command">name:</span> Deploy Blazor to GitHub Pages
+
+<span class="command">on:</span>
+  push:
+    branches: [ main ]
+
+<span class="command">jobs:</span>
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: <span class="string">'8.0.x'</span>
+    
+    - name: Publish
+      run: <span class="command">dotnet publish -c Release -o publish</span>
+    
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./publish/wwwroot
+        force_orphan: true
+                    </div>
+                    <div class="success-box" style="margin-left: 50px; margin-top: 15px;">
+                        <strong>✅ Ventaja:</strong>
+                        Con este workflow, cada push a main desplegará automáticamente a GitHub Pages.
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid" style="margin-top: 40px;">
+                <div class="card">
+                    <h4><span class="card-icon">🔍</span>Verificación Post-Deploy</h4>
+                    <ul>
+                        <li>Probar todas las rutas de la aplicación</li>
+                        <li>Verificar que recursos (CSS, JS) cargan correctamente</li>
+                        <li>Comprobar responsive en diferentes dispositivos</li>
+                        <li>Validar funcionamiento en navegadores diferentes</li>
+                        <li>Verificar consola del navegador (F12) sin errores</li>
+                        <li>Probar rendimiento con Lighthouse</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h4><span class="card-icon">🔄</span>Actualizar la Aplicación</h4>
+                    <div class="code-block">
+<span class="comment"># Hacer cambios en tu código (rama main)</span>
+<span class="command">git add .</span>
+<span class="command">git commit -m</span> <span class="string">"Actualización: nueva funcionalidad"</span>
+<span class="command">git push origin main</span>
+
+<span class="comment"># Si usas GitHub Actions, se despliega automáticamente</span>
+<span class="comment"># Si no, repetir pasos 2-4 manualmente</span>
+
+<span class="comment"># Compilar nuevamente</span>
+<span class="command">dotnet publish -c Release -o publish</span>
+
+<span class="comment"># Cambiar a gh-pages y actualizar</span>
+<span class="command">git checkout gh-pages</span>
+<span class="comment"># Copiar archivos actualizados</span>
+<span class="command">git add .</span>
+<span class="command">git commit -m</span> <span class="string">"Update: deploy nueva versión"</span>
+<span class="command">git push origin gh-pages</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="warning-box" style="margin-top: 30px;">
+                <strong>⚠️ Problemas Comunes y Soluciones:</strong>
+                <ul style="margin-top: 10px;">
+                    <li><strong>Página en blanco:</strong> Verifica la base href en index.html</li>
+                    <li><strong>404 en rutas:</strong> Asegúrate de que .nojekyll existe</li>
+                    <li><strong>Recursos no cargan:</strong> Comprueba las rutas relativas</li>
+                    <li><strong>No se actualiza:</strong> Limpia caché del navegador (Ctrl+F5)</li>
+                    <li><strong>Errores de certificado SSL:</strong> GitHub Pages provee HTTPS automáticamente</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Resumen Final -->
+        <div class="section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <h2 style="color: white; text-align: center; font-size: 2.5em; margin-bottom: 40px;">📊 Resumen del Proceso Completo</h2>
+            
+            <div class="grid">
+                <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; backdrop-filter: blur(10px);">
+                    <h3 style="margin-bottom: 15px; font-size: 1.5em;">✅ Checklist Antes de Publicar</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="padding: 8px 0;">☐ Código probado localmente</li>
+                        <li style="padding: 8px 0;">☐ Sin errores en consola del navegador</li>
+                        <li style="padding: 8px 0;">☐ .gitignore configurado correctamente</li>
+                        <li style="padding: 8px 0;">☐ Base href actualizada para GitHub Pages</li>
+                        <li style="padding: 8px 0;">☐ Archivo .nojekyll creado</li>
+                        <li style="padding: 8px 0;">☐ Todos los commits pusheados</li>
+                        <li style="padding: 8px 0;">☐ Compilación Release exitosa</li>
+                        <li style="padding: 8px 0;">☐ GitHub Pages habilitado</li>
+                    </ul>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; backdrop-filter: blur(10px);">
+                    <h3 style="margin-bottom: 15px; font-size: 1.5em;">🎯 Objetivos de Aprendizaje</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="padding: 8px 0;">✓ Configurar entorno de desarrollo profesional</li>
+                        <li style="padding: 8px 0;">✓ Dominar control de versiones con Git/GitHub</li>
+                        <li style="padding: 8px 0;">✓ Aplicar mejores prácticas de desarrollo</li>
+                        <li style="padding: 8px 0;">✓ Trabajar con flujo de ramas y Pull Requests</li>
+                        <li style="padding: 8px 0;">✓ Compilar y optimizar aplicaciones Blazor</li>
+                        <li style="padding: 8px 0;">✓ Publicar aplicaciones en la nube gratis</li>
+                        <li style="padding: 8px 0;">✓ Automatizar despliegues con CI/CD</li>
+                        <li style="padding: 8px 0;">✓ Resolver problemas comunes de deployment</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="margin-top: 40px; text-align: center; padding: 30px; background: rgba(255,255,255,0.1); border-radius: 15px; backdrop-filter: blur(10px);">
+                <h3 style="font-size: 1.8em; margin-bottom: 15px;">🚀 Tu URL Final</h3>
+                <p style="font-size: 1.3em; font-family: 'Courier New', monospace; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin: 20px 0;">
+                    https://[tu-usuario].github.io/[nombre-repo]/
+                </p>
+                <p style="font-size: 1.1em; opacity: 0.9;">
+                    ¡Comparte esta URL en tu portafolio, CV y redes profesionales!
+                </p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <h3>🎓 Herramientas del Ecosistema</h3>
+            <div style="display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 30px;">
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 3em;">💻</div>
+                    <strong>Visual Studio 2022</strong>
+                    <p>IDE profesional</p>
+                </div>
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 3em;">🔥</div>
+                    <strong>Blazor WebAssembly</strong>
+                    <p>Framework C#</p>
+                </div>
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 3em;">📦</div>
+                    <strong>Git & GitHub</strong>
+                    <p>Control de versiones</p>
+                </div>
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 3em;">🌐</div>
+                    <strong>GitHub Pages</strong>
+                    <p>Hosting gratuito</p>
+                </div>
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 3em;">🎨</div>
+                    <strong>Bootstrap/Tailwind</strong>
+                    <p>Framework CSS</p>
+                </div>
+            </div>
+            <p style="margin-top: 40px; opacity: 0.7;">
+                Desarrollado como guía educativa para desarrollo web moderno
+            </p>
+        </div>
+    </div>
+</body>
+</html>
